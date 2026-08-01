@@ -1,2 +1,2 @@
 # bugajos.github.io
-Making some updates. Check back soon.
+go to [/american-moon](https://bugajos.github.io/american-moon/)
