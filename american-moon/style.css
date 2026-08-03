@@ -32,6 +32,8 @@ blockquote {
     border-radius: 16px;
 
     box-shadow: 0 20px 35px rgba(0,0,0,.06);
+
+    white-space: pre-line;
 }
 
 blockquote::before {
@@ -135,6 +137,8 @@ span {
     border: 1px solid #dbe3ec;
     border-left: 5px solid #2563eb;
     border-radius: 12px;
+
+    white-space: pre-line;
 }
 
 span::before {
