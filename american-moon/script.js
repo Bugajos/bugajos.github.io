@@ -4,7 +4,9 @@ window.addEventListener("scroll", () => {
     topBtn.classList.toggle("show", window.scrollY > 300);
 });
 
-function scrollToTop() {
+function scrollToTop(event) {
+    if (event) event.preventDefault();
+    
     window.scrollTo({
         top: 0,
         behavior: "smooth"
