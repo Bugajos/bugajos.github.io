@@ -27,11 +27,10 @@ const observer = new IntersectionObserver(entries => {
 });
 
 images.forEach(img => observer.observe(img));
-
 (function () {
     if (!location.hostname.endsWith('.translate.goog')) return;
 
-    function restoreOriginalUrl(href) {
+    function translateToOriginal(href) {
         try {
             const url = new URL(href, location.href);
 
@@ -39,11 +38,12 @@ images.forEach(img => observer.observe(img));
                 return null;
             }
 
-            let host = url.hostname.replace(/\.translate\.goog$/, '');
+            let host = url.hostname.slice(0, -'.translate.goog'.length);
 
-            host = host.replace(/--/g, '\x00');
-            host = host.replace(/-/g, '.');
-            host = host.replace(/\x00/g, '-');
+            host = host
+                .replace(/--/g, '\x01')
+                .replace(/-/g, '.')
+                .replace(/\x01/g, '-');
 
             url.hostname = host;
 
@@ -56,29 +56,32 @@ images.forEach(img => observer.observe(img));
                 '_x_tr_enc',
                 '_x_tr_sch',
                 '_x_tr_orig'
-            ].forEach(param => {
-                url.searchParams.delete(param);
-            });
+            ].forEach(p => url.searchParams.delete(p));
 
-            return url.href;
+            return url.toString();
         } catch {
             return null;
         }
     }
 
     document.addEventListener('click', function (event) {
-        const link = event.target.closest('a[href]');
+        let element = event.target;
 
-        if (!link) return;
+        while (element && element !== document) {
+            if (element.tagName === 'A' && element.href) {
+                const original = translateToOriginal(element.href);
 
-        const originalUrl = restoreOriginalUrl(link.href);
+                if (original) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    event.stopImmediatePropagation();
 
-        if (!originalUrl) return;
+                    window.location.replace(original);
+                    return false;
+                }
+            }
 
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
-
-        window.location.assign(originalUrl);
+            element = element.parentElement;
+        }
     }, true);
 })();
