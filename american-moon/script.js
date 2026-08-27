@@ -14,16 +14,24 @@ function scrollToTop(event) {
 }
 const images = document.querySelectorAll('img[data-src]');
 
-const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
+const observer = new IntersectionObserver(
+    entries => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
 
-        const img = entry.target;
-        img.src = img.dataset.src;
-        img.removeAttribute('data-src');
+            const img = entry.target;
+            const src = img.dataset.src;
 
-        observer.unobserve(img);
-    });
-});
+            img.src = src;
+            img.removeAttribute('data-src');
+
+            observer.unobserve(img);
+        });
+    },
+    {
+        rootMargin: '300px 0px',
+        threshold: 0
+    }
+);
 
 images.forEach(img => observer.observe(img));
