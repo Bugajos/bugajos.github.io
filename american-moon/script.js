@@ -35,3 +35,57 @@ const observer = new IntersectionObserver(
 );
 
 images.forEach(img => observer.observe(img));
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const lightbox = document.createElement("div");
+    lightbox.id = "imageLightbox";
+
+    lightbox.innerHTML = `
+        <span class="close" aria-label="Close">&times;</span>
+        <img src="" alt="">
+    `;
+
+    document.body.appendChild(lightbox);
+
+    const lightboxImg = lightbox.querySelector("img");
+    const closeBtn = lightbox.querySelector(".close");
+
+    document.querySelectorAll("img[data-src]").forEach(img => {
+
+        img.addEventListener("click", () => {
+
+            const src = img.getAttribute("src") || img.getAttribute("data-src");
+
+            if (!src) return;
+
+            lightboxImg.src = src;
+            lightboxImg.alt = img.alt || "";
+
+            lightbox.classList.add("show");
+            document.body.style.overflow = "hidden";
+        });
+
+    });
+
+    function closeLightbox() {
+        lightbox.classList.remove("show");
+        document.body.style.overflow = "";
+        lightboxImg.src = "";
+    }
+
+    closeBtn.addEventListener("click", closeLightbox);
+
+    lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+
+    document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+            closeLightbox();
+        }
+    });
+
+});
