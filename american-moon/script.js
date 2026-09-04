@@ -89,3 +89,33 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
 });
+
+const savedMode = localStorage.getItem("darkMode");
+
+if (savedMode === "enabled") {
+    document.body.classList.add("dark");
+}
+
+
+document.addEventListener("click", (e) => {
+    const button = e.target.closest("#darkToggle");
+
+    if (!button) return;
+
+
+    button.classList.remove("flip");
+    void button.offsetWidth;
+    button.classList.add("flip");
+
+
+    const isDark = document.body.classList.toggle("dark");
+
+
+    localStorage.setItem(
+        "darkMode",
+        isDark ? "enabled" : "disabled"
+    );
+
+
+    button.textContent = isDark ? "🔆" : "🌙";
+});
